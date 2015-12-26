@@ -1,0 +1,31 @@
+{
+  "name": "lezhnev/instagram2vk",
+  "type": "library",
+  "description": "Instagram2VK.com Reposter is a library to post instagram pictures to VK.com community's wall",
+  "keywords": [
+    "instagram",
+    "vk.com",
+    "reposrting",
+    "schedule"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dmitriy Lezhnev",
+      "email": "meekman74@gmail.com",
+      "homepage": "http://dimalezhnev.ru"
+    }
+  ],
+  "require": {
+  },
+  "require-dev": {
+    "fzaninotto/faker": "^1.5",
+    "phpunit/phpunit": "5.1.*",
+    "mockery/mockery": "^0.9.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Instagram2Vk\\": "src/"
+    }
+  }
+}
