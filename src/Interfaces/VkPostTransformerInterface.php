@@ -25,11 +25,11 @@ interface VkPostTransformerInterface {
     public function getText();
 
     /**
-     * Return image path to local image file to attach to new post
+     * Return image url to image file to attach to new post
      * or null if skip attaching
      *
      * @return mixed
      */
-    public function getImagePath();
+    public function getImageUrl();
 
 }

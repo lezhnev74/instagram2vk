@@ -3,7 +3,16 @@ namespace Instagram2Vk\Classes;
 
 use Instagram2Vk\Interfaces\VkPostTransformerInterface;
 
-class VkPostTransformer implements VkPostTransformerInterface {
+
+/**
+ * Class VkPostTransformer
+ * This tranformer expectd Instagram API post's data and
+ * transform it to message text and image path
+ *
+ * @package Instagram2Vk\Classes
+ */
+class VkPostTransformer implements VkPostTransformerInterface
+{
 
     private $post = null;
 
@@ -25,18 +34,30 @@ class VkPostTransformer implements VkPostTransformerInterface {
      */
     public function getText()
     {
-        // TODO: Implement getText() method.
+
+        if (isset($this->post["caption"]) && isset($this->post["caption"]["text"])) {
+            return $this->post["caption"]["text"];
+        }
+
+        return "";
     }
 
     /**
-     * Return image path to local image file to attach to new post
+     * Return image
      * or null if skip attaching
      *
      * @return mixed
      */
-    public function getImagePath()
+    public function getImageUrl()
     {
-        // TODO: Implement getImagePath() method.
+        if (isset($this->post["images"])
+            && isset($this->post["images"]["standard_resolution"])
+            && isset($this->post["images"]["standard_resolution"]["url"])
+        ) {
+            return $this->post["images"]["standard_resolution"]["url"];
+        }
+
+        return null;
     }
 
 }
