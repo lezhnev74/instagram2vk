@@ -18,7 +18,7 @@ class VkPostTransformerTest extends PHPUnit_Framework_TestCase
         $json_post = file_get_contents(__DIR__."/static/post.json");
         $this->sample_post = json_decode($json_post, true);
 
-        
+
 
     }
 
