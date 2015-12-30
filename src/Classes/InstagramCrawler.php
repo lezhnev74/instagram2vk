@@ -2,17 +2,18 @@
 
 namespace Instagram2Vk\Classes;
 
+use Instagram2Vk\Interfaces\DataSourceInterface;
 use InvalidArgumentException;
 use GuzzleHttp\ClientInterface;
 use Instagram2Vk\Exceptions\InstagramException;
 
 /**
  * Class InstagramCrawler
- * Requests needed media
+ * Requests instagram API and returns media arrays
  *
  * @package Instagram2Vk\Classes
  */
-class InstagramCrawler
+class InstagramCrawler implements DataSourceInterface
 {
     /**
      * Client to work with HTTP
@@ -47,6 +48,13 @@ class InstagramCrawler
      * @var null
      */
     private $access_token = null;
+
+    /**
+     * Crawled media
+     *
+     * @var array
+     */
+    private $media = [];
 
 
     /**
@@ -87,7 +95,7 @@ class InstagramCrawler
      */
     public function crawl()
     {
-        $media = [
+        $this->media = [
             "users" => [],
             "tags"  => [],
         ];
@@ -100,7 +108,7 @@ class InstagramCrawler
             // filter first symbols if needed
             $tag_name = str_replace("#", "", $tag_name);
 
-            $media['tags'][$tag_name] = $this->getMediaForTag($tag_name);
+            $this->media['tags'][$tag_name] = $this->getMediaForTag($tag_name);
         }
 
         // Gather user's media
@@ -108,10 +116,10 @@ class InstagramCrawler
             // filter first symbols if needed
             $tag_name = str_replace("@", "", $username);
 
-            $media['users'][$this->getUserName($username)] = $this->getMediaForUser($username);
+            $this->media['users'][$this->getUserName($username)] = $this->getMediaForUser($username);
         }
 
-        return $media;
+        return $this->media;
     }
 
     /**
@@ -221,5 +229,29 @@ class InstagramCrawler
 
         return $id;
     }
+
+    /**
+     * Returns array of data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        $result = [];
+
+        //
+        // flatten media to single array
+        //
+
+        foreach($this->media['users'] as $username=>$media) {
+            $result = array_merge($result, $media);
+        }
+        foreach($this->media['tags'] as $tag=>$media) {
+            $result = array_merge($result, $media);
+        }
+
+        return $result;
+    }
+
 
 }

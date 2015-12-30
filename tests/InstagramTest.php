@@ -22,7 +22,7 @@ class InstagramTest extends PHPUnit_Framework_TestCase
     public function test_gather_user_media() {
 
         $client = new GuzzleHttp\Client();
-        $crawler = new InstagramCrawler($client,$this->access_token,[/*no tags*/],["dmitriy.lezhnev"]);
+        $crawler = new InstagramCrawler($client,$this->access_token,[/*no tags*/],[$this->access_token_username]);
 
         $data = $crawler->crawl();
 
@@ -74,11 +74,37 @@ class InstagramTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('russia',$data['tags']));
         $this->assertTrue(array_key_exists('moscow',$data['tags']));
 
-        $this->assertTrue(array_key_exists($this->access_token_username,$data['tags']));
+        $this->assertTrue(array_key_exists($this->access_token_username,$data['users']));
+        $this->assertTrue(array_key_exists('applemusic',$data['users']));
 
-        // @todo enable this test after app approval
-        $this->assertTrue(array_key_exists('applemusic',$data['tags']));
+        $this->assertTrue(count($data['users'][$this->access_token_username])!=0);
+        $this->assertTrue(count($data['users']['applemusic'])!=0);
 
+        $this->assertTrue(count($data['tags']['russia'])!=0);
+        $this->assertTrue(count($data['tags']['moscow'])!=0);
+
+    }
+
+    /**
+     * Make sure we will recieve flatten data from from data_source
+     */
+    public function test_data_source_interface_implementation() {
+
+        $client = new GuzzleHttp\Client();
+        $crawler = new InstagramCrawler($client,$this->access_token,['russia','moscow'],[$this->access_token_username,'applemusic']);
+
+        $data = $crawler->crawl();
+
+        // manually flatten data
+        $flatten_data = [];
+        foreach($data['users'] as $media_array) {
+            $flatten_data = array_merge($flatten_data, $media_array);
+        }
+        foreach($data['tags'] as $media_array) {
+            $flatten_data = array_merge($flatten_data, $media_array);
+        }
+
+        $this->assertEquals($flatten_data, $crawler->getData());
     }
 
 }

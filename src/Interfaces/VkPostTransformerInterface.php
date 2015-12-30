@@ -10,6 +10,14 @@ namespace Instagram2Vk\Interfaces;
 interface VkPostTransformerInterface {
 
     /**
+     * Generate new instance with filled post data
+     *
+     * @param $post
+     * @return mixed
+     */
+    public static function getInstance($post);
+
+    /**
      * Set post's original data to transform
      *
      * @param $post

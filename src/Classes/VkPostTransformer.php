@@ -17,6 +17,19 @@ class VkPostTransformer implements VkPostTransformerInterface
     private $post = null;
 
     /**
+     * Get new instance of this class
+     *
+     * @return VkPostTransformer
+     */
+    static function getInstance($post)
+    {
+        $instance = new self;
+        $instance->setPost($post);
+
+        return $instance;
+    }
+
+    /**
      * Set post's original data to transform
      *
      * @param $post
