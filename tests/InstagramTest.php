@@ -75,6 +75,8 @@ class InstagramTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(array_key_exists('moscow',$data['tags']));
 
         $this->assertTrue(array_key_exists($this->access_token_username,$data['tags']));
+
+        // @todo enable this test after app approval
         $this->assertTrue(array_key_exists('applemusic',$data['tags']));
 
     }
