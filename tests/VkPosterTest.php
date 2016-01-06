@@ -1,6 +1,9 @@
 <?php
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Instagram2Vk\Classes\InstagramCrawler;
 use Instagram2Vk\Classes\VkPoster;
 use Instagram2Vk\Classes\VkPostTimeScheduler;
@@ -34,8 +37,7 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
 
     }
 
-
-    public function test_instantiation()
+    public function test_data_source_call_from_VkPoster()
     {
 
         // mock data Source
@@ -59,15 +61,45 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function test_posting_from_isntagram() {
+    /**
+     * Test whole flow:
+     * - get data from Instagram
+     * - call data source from Poster
+     * - post data to Vk
+     */
+    public function test_flow_posting_from_instagram_to_vk() {
 
-        $dataSource = new InstagramCrawler($this->client,
+        // MOCK HTTP RESPONSES FOR INSTAGRAM
+        $mock = new MockHandler([
+            // return answer for username's lookup
+            new Response(200, [], file_get_contents(__DIR__."/static/lezhnev_user_search.json")),
+            // return recent media for username
+            new Response(200, [], file_get_contents(__DIR__."/static/user_recent.json"))
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client_mocked_instagram = new Client(['handler' => $handler]);
+
+        // MOCK HTTP RESPONSES FOR VK.COM
+        $mock = new MockHandler([
+            // return answer for username's lookup
+            new Response(200, [], file_get_contents(__DIR__."/static/wall_postponed_0.json")),
+            // return recent media for username
+            new Response(200, [], "")
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client_mocked_vk = new Client(['handler' => $handler]);
+
+        // Crawl new data
+        $dataSource = new InstagramCrawler($client_mocked_instagram,
             $this->instagram_access_token,
-            [],
+            [/* no tags */],
             [$this->instagram_access_token_username]
         );
         $dataSource->crawl();
 
+        // Pass data to VK poster
         $poster = new VkPoster(
             $this->scheduler,
             $this->transformer,
@@ -77,7 +109,10 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
             $this->group_id
         );
 
-        $poster->run();
+        //$poster->run();
+
+
+
     }
 
 

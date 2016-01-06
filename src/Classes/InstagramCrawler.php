@@ -166,10 +166,15 @@ class InstagramCrawler implements DataSourceInterface
         // add access token to this request
         $query_agrs['access_token'] = $this->access_token;
 
-        $response = $this->client->request('GET', $url, [
+        $options = [
             'query' => $query_agrs,
             'http_errors' => false // do not throw exception of answer
-        ]);
+        ];
+        $response = $this->client->request('GET', $url, $options);
+
+        // dump full requested URL
+        //echo $url."?".\GuzzleHttp\Psr7\build_query($query_agrs)."\n\n";
+
 
         // expects json output
 

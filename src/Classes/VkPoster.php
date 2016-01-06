@@ -53,6 +53,13 @@ class VkPoster
     private $access_token = null;
 
     /**
+     * Postponed posts for <group_id> group
+     *
+     * @var array
+     */
+    private $postponed = null;
+
+    /**
      * Set group id for publishing data to
      *
      * @var null
@@ -80,18 +87,21 @@ class VkPoster
      */
     public function run()
     {
+        // @todo how to know what post was already published?
+
+        // gather postponed posts
+        $this->postponed = $this->getPostponed();
 
         // detect last published time
         $lastDate = $this->getLastPublishedTime();
 
         // get data from data source
-        foreach ($this->dataSource->getData() as $item) {
+        foreach ($this->dataSource->getData() as $i => $item) {
 
             $transformer = call_user_func([$this->transformer, 'getInstance'], $item);
 
-            // $transformer->getText()
-            // $transformer->getImageUrl()
-
+            //echo $transformer->getText();
+            //echo $transformer->getImageUrl();
 
         }
 
@@ -104,21 +114,13 @@ class VkPoster
     private function getLastPublishedTime()
     {
 
-        $method = "wall.get";
-        $params = [
-            "owner_id" => "-" . $this->group_id, // as of https://vk.com/dev/wall.get
-            "count"    => 100,
-            "filter"   => "postponed",
-            "extended" => '1',
-        ];
-
-        $data = $this->request($method, $params);
+        $data = $this->postponed;
 
         if (isset($data['wall'])) {
 
             $count = array_shift($data['wall']);
 
-            if($count) {
+            if ($count) {
 
                 usort($data['wall'], function ($a, $b) {
                     return $b['date'] - $a['date'];
@@ -134,18 +136,63 @@ class VkPoster
 
     }
 
-    private function request($api_method, $query_params)
+    /**
+     * Get postponed posts
+     *
+     * @param int $count
+     * @throws VkException
+     */
+    private function getPostponed($count = 100)
+    {
+        // API limit to 100
+        if ($count > 100) {
+            $count = 100;
+        }
+
+        $method = "wall.get";
+        $params = [
+            "owner_id" => "-" . $this->group_id, // as of https://vk.com/dev/wall.get
+            "count"    => $count,
+            "filter"   => "postponed",
+            "extended" => '1',
+        ];
+
+        $data = $this->request($method, $params);
+
+        if (isset($data['wall'])) {
+            // remove first argument with counter
+            array_shift($data['wall']);
+            // return data array only
+            return $data['wall'];
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Make request to API
+     *
+     * @param $api_method
+     * @param $query_args
+     * @return mixed
+     * @throws VkException
+     */
+    private function request($api_method, $query_args)
     {
 
-        $query_params['access_token'] = $this->access_token;
-        $query_params['version'] = '5.42';
+        $query_args['access_token'] = $this->access_token;
+        $query_args['version'] = '5.42';
 
         $url = "https://api.vk.com/method/" . $api_method;
 
         $response = $this->client->request('GET', $url, [
-            'query'       => $query_params,
+            'query'       => $query_args,
             'http_errors' => false // do not throw exception of answer
         ]);
+
+        // dump full requested URL
+        echo $url . "?" . \GuzzleHttp\Psr7\build_query($query_args) . "\n\n";
 
         // expects json output
 

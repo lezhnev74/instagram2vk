@@ -22,10 +22,8 @@ class VkPostTransformerTest extends PHPUnit_Framework_TestCase
 
     }
 
-
     function test_vk_formatter_with_image()
     {
-
         $posts = [$this->sample_post];
 
         $vkFormatter = new VkPostTransformer();
@@ -33,6 +31,19 @@ class VkPostTransformerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($vkFormatter->getText(), $posts[0]["caption"]['text']);
         $this->assertEquals($vkFormatter->getImageUrl(), $posts[0]["images"]["standard_resolution"]["url"]);
+    }
+
+
+    public function test_vk_formatter_from_instagram_crawler() {
+
+        $vkFormatter = new VkPostTransformer();
+
+        $json_data_recent = json_decode(file_get_contents(__DIR__."/static/user_recent.json"), true);
+        foreach($json_data_recent['data'] as $post) {
+            $vkFormatter->setPost($post);
+            $this->assertEquals($vkFormatter->getText(), $post["caption"]['text']);
+            $this->assertEquals($vkFormatter->getImageUrl(), $post["images"]["standard_resolution"]["url"]);
+        }
 
     }
 

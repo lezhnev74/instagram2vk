@@ -1,5 +1,9 @@
 <?php
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Instagram2Vk\Classes\InstagramCrawler;
 
 class InstagramTest extends PHPUnit_Framework_TestCase
@@ -106,5 +110,7 @@ class InstagramTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($flatten_data, $crawler->getData());
     }
+
+
 
 }
