@@ -4,10 +4,11 @@ use Instagram2Vk\Classes\State;
 
 class StateTest extends PHPUnit_Framework_TestCase {
 
-    function test_prepare_database() {
+    function test_state() {
 
         // create in memory
         $state = new State(":memory:");
+        $this->assertNull($state->getLastProcessedPost());
 
         $data = [
             [
@@ -32,12 +33,8 @@ class StateTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($post['instagram_post_id'], 'WYZ');
 
-
-
         $this->assertTrue($state->isProceeded($data[0]['post_id']));
         $this->assertFalse($state->isProceeded("SOME_ID"));
-
-
 
     }
 

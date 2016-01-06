@@ -1,13 +1,16 @@
 <?php
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
+
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Instagram2Vk\Classes\InstagramCrawler;
+use Instagram2Vk\Classes\State;
 use Instagram2Vk\Classes\VkPoster;
+use GuzzleHttp\Handler\MockHandler;
+use Instagram2Vk\Classes\InstagramCrawler;
 use Instagram2Vk\Classes\VkPostTimeScheduler;
 use Instagram2Vk\Classes\VkPostTransformer;
+
 
 
 class VkPosterTest extends PHPUnit_Framework_TestCase
@@ -17,6 +20,7 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
     private $scheduler = null;
     private $client = null;
     private $access_token = null;
+    private $state = null;
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -29,6 +33,7 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
         $this->transformer = new VkPostTransformer();
         $this->scheduler = new VkPostTimeScheduler();
         $this->client = new Client();
+        $this->state = new State(":memory:");
 
         $this->access_token = getenv('VK_ACCESS_TOKEN');
         $this->instagram_access_token = getenv('INSTAGRAM_ACCESS_TOKEN');
@@ -53,6 +58,7 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
             $this->transformer,
             $dataSource,
             $this->client,
+            $this->state,
             $this->access_token,
             $this->group_id
         );
@@ -105,13 +111,12 @@ class VkPosterTest extends PHPUnit_Framework_TestCase
             $this->transformer,
             $dataSource,
             $this->client,
+            $this->state,
             $this->access_token,
             $this->group_id
         );
 
-        //$poster->run();
-
-
+        $poster->run();
 
     }
 

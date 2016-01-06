@@ -73,4 +73,19 @@ class VkPostTransformer implements VkPostTransformerInterface
         return null;
     }
 
+    /**
+     * Return unique id of this post (for maintaining state)
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        if (isset($this->post["id"])) {
+            return $this->post["id"];
+        }
+
+        return null;
+    }
+
+
 }

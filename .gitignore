@@ -1,6 +1,5 @@
 public/
 .idea/
 vendor/
-phpunit.xml
 composer.lock
 .DS_STORE

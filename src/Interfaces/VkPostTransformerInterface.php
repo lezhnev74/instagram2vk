@@ -40,4 +40,11 @@ interface VkPostTransformerInterface {
      */
     public function getImageUrl();
 
+    /**
+     * Return unique id of this post (for maintaining state)
+     *
+     * @return mixed
+     */
+    public function getId();
+
 }

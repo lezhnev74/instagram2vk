@@ -2,6 +2,7 @@
 
 namespace Instagram2Vk\Classes;
 
+use Instagram2Vk\Interfaces\StateInterface;
 use PDO;
 
 /**
@@ -10,7 +11,7 @@ use PDO;
  *
  * @package Instagram2Vk\Classes
  */
-class State
+class State implements StateInterface
 {
 
     /**
@@ -63,8 +64,8 @@ class State
 
         $result = $this->db->query('SELECT * FROM ' . $this->table . ' order by instagram_created_at desc limit 1');
 
-        if (count($result)) {
-            return $result->fetch();
+        if($row = $result->fetch()) {
+            return $row;
         }
 
         return null;

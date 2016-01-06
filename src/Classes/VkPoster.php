@@ -4,9 +4,11 @@ namespace Instagram2Vk\Classes;
 
 use GuzzleHttp\ClientInterface;
 use Instagram2Vk\Exceptions\VkException;
+use Instagram2Vk\Interfaces\StateInterface;
 use Instagram2Vk\Interfaces\DataSourceInterface;
 use Instagram2Vk\Interfaces\VkPostTimeScheduleInterface;
 use Instagram2Vk\Interfaces\VkPostTransformerInterface;
+
 
 /**
  * Class VkPoster
@@ -30,6 +32,13 @@ class VkPoster
      * @var VkPostTransformerInterface|null
      */
     private $transformer = null;
+
+    /**
+     * State class
+     *
+     * @var null
+     */
+    private $state = null;
 
     /**
      * Class that gives array of data to schedule
@@ -71,6 +80,7 @@ class VkPoster
         VkPostTransformerInterface $transformer,
         DataSourceInterface $dataSource,
         ClientInterface $http_client,
+        StateInterface $state,
         $vk_access_token,
         $group_id
     ) {
@@ -78,6 +88,7 @@ class VkPoster
         $this->transformer = $transformer;
         $this->dataSource = $dataSource;
         $this->client = $http_client;
+        $this->state = $state;
         $this->access_token = $vk_access_token;
         $this->group_id = $group_id;
     }
@@ -87,8 +98,6 @@ class VkPoster
      */
     public function run()
     {
-        // @todo how to know what post was already published?
-
         // gather postponed posts
         $this->postponed = $this->getPostponed();
 
@@ -100,8 +109,10 @@ class VkPoster
 
             $transformer = call_user_func([$this->transformer, 'getInstance'], $item);
 
-            //echo $transformer->getText();
-            //echo $transformer->getImageUrl();
+            // check that this post was not yet posted
+            if(!$this->state->isProceeded($transformer->getId())) {
+                echo "Ok, process ".$transformer->getId()." ".$transformer->getText()."\n";
+            }
 
         }
 
@@ -162,6 +173,7 @@ class VkPoster
         if (isset($data['wall'])) {
             // remove first argument with counter
             array_shift($data['wall']);
+
             // return data array only
             return $data['wall'];
         }
