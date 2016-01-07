@@ -12,6 +12,12 @@ In order to run this script you will need:
 - Instagram access_token (make sure that access_token is not given for app in Sandbox mode). Access token must have scopes: `basic` and `public_content`.
 - Vk.com access_token for reposting photos (must have rights to post on given wall).
 
+## Installation
+Just run composer:
+
+```
+composer require lezhnev/instagram2vk
+```
 
 ## Example
 
