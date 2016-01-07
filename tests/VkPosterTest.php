@@ -1,7 +1,6 @@
 <?php
 
 use GuzzleHttp\Client;
-
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Instagram2Vk\Classes\State;

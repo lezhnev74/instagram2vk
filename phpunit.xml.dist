@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Instagram2Vk Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="INSTAGRAM_ACCESS_TOKEN" value=""/>
+        <env name="INSTAGRAM_ACCESS_TOKEN_USERNAME" value=""/>
+
+        <env name="VK_ACCESS_TOKEN" value=""/>
+        <env name="VK_GROUP_ID" value=""/>
+
+        <env name="TIMEZONE" value="Europe/Moscow"/>
+    </php>
+</phpunit>
