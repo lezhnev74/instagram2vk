@@ -1,4 +1,9 @@
 # instagram2vk
+
+[![License](https://poser.pugx.org/lezhnev/instagram2vk/license)](https://packagist.org/packages/lezhnev/instagram2vk)
+[![Latest Stable Version](https://poser.pugx.org/lezhnev/instagram2vk/v/stable)](https://packagist.org/packages/lezhnev/instagram2vk)
+
+
 Instagram reposter to vk.com does exatly this - schedules reposting of instagram photos to VK.com (on community's wall):
 
 - you can set instagram usernames and tags to gather photos from;
