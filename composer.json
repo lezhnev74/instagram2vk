@@ -17,7 +17,8 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "^6.1"
+    "guzzlehttp/guzzle": "^6.1",
+    "lezhnev74/simple-downloader": "^1.0"
   },
   "require-dev": {
     "fzaninotto/faker": "^1.5",

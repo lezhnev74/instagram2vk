@@ -87,5 +87,19 @@ class VkPostTransformer implements VkPostTransformerInterface
         return null;
     }
 
+    /**
+     * Return creation time in UNIXTIMESTAMP
+     *
+     * @return mixed
+     */
+    public function getCTime()
+    {
+        if (isset($this->post["date"])) {
+            return $this->post["date"];
+        }
+
+        return null;
+    }
+
 
 }

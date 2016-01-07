@@ -8,3 +8,16 @@ Requirements
 
 
   
+VkScheduler expects timeslots as:
+
+```
+$this->slots = [
+    "Mon" => ["12:20", "21:30"],
+    "Tue" => [],
+    "Wed" => [],
+    "Thu" => [],
+    "Fri" => [],
+    "Sat" => ["00:30"],
+    "Sun" => [],
+];
+```

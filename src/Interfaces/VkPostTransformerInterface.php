@@ -47,4 +47,11 @@ interface VkPostTransformerInterface {
      */
     public function getId();
 
+    /**
+     * Return creation time in UNIXTIMESTAMP
+     *
+     * @return mixed
+     */
+    public function getCTime();
+
 }
