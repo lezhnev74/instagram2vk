@@ -90,7 +90,7 @@ class InstagramTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Make sure we will recieve flatten data from from data_source
+     * Make sure we will receive flatten data from from data_source
      */
     public function test_data_source_interface_implementation() {
 
